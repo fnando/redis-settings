@@ -49,6 +49,14 @@ If you're running Ruby 1.9, you're ready to go!
 
 <b>NOTE:</b> When record is destroyed, all settings are erased.
 
+=== Rails 3
+
+Rails 3 set its own namespace like <tt>settings/#{Rails.env}</tt>.
+
+You can override the root namespace as
+
+  Redis::Settings.root_namespace = "custom"
+
 = Mantainer
 
 * Nando Vieira (http://nandovieira.com.br)

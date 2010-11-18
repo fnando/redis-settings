@@ -3,6 +3,7 @@ require "spec_helper"
 describe Redis::Settings::ActiveRecord do
   let(:user) { User.create }
   let(:admin) { Admin::User.create }
+  let(:root) { Redis::Settings.root_namespace }
 
   before do
     user.settings.clear
@@ -20,8 +21,8 @@ describe Redis::Settings::ActiveRecord do
   end
 
   it "should set namespace accordingly" do
-    user.settings.namespace.should == "settings/user/#{user.id}"
-    admin.settings.namespace.should == "settings/admin/user/#{admin.id}"
+    user.settings.namespace.should == "#{root}/user/#{user.id}"
+    admin.settings.namespace.should == "#{root}/admin/user/#{admin.id}"
   end
 
   it "should define setting" do
@@ -35,6 +36,6 @@ describe Redis::Settings::ActiveRecord do
   it "should remove all settings when destroy a record" do
     user.settings[:role] = "customer"
     user.destroy
-    Redis::Settings.connection.hgetall("settings/user/#{user.id}").should be_empty
+    Redis::Settings.connection.hgetall("#{root}/user/#{user.id}").should be_empty
   end
 end

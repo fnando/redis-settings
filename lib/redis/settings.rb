@@ -9,16 +9,19 @@ end
 class Redis
   class Settings
     require "redis/settings/active_record" if defined?(ActiveRecord)
+    require "redis/settings/railtie" if defined?(Rails) && Rails.version >= "3.0.0"
 
     class NewRecordError < StandardError
-      def message
-        "You can't access settings on new records"
-      end
+      def message; "You can't access settings on new records"; end
     end
 
     class << self
       attr_accessor :connection
+      attr_accessor :root_namespace
     end
+
+    # Set the root namespace to "settings" by default.
+    self.root_namespace = "settings"
 
     # Return Redis::Settings.
     #
@@ -39,14 +42,14 @@ class Redis
       @namespace = namespace
     end
 
-    # Returned namespace with <tt>settings</tt> as its root.
+    # Return instance's namespace concatenated with Redis::Settings.root_namespace.
     #
     #   s = Redis::Settings.new("app")
     #   s.namespace
     #   #=> "settings/app"
     #
     def namespace
-      "settings/#{@namespace}"
+      "#{self.class.root_namespace}/#{@namespace}"
     end
 
     # Retrieve setting by its name. When nil, return the default value.

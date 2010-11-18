@@ -8,7 +8,7 @@ describe Redis::Settings do
     subject.clear
   end
 
-  describe ".all" do
+  describe "#all" do
     it "should return all settings" do
       subject[:items] = 10
       subject[:enabled] = true
@@ -23,13 +23,27 @@ describe Redis::Settings do
     end
   end
 
-  describe ".namespace" do
+  describe ".root_namespace" do
+    before { Redis::Settings.root_namespace = "settings/development" }
+    after { Redis::Settings.root_namespace = "settings" }
+
+    it "should use custom namespace" do
+      subject.namespace.should == "settings/development/app"
+    end
+
+    it "should set value using custom namespace" do
+      subject[:items] = 10
+      JSON.parse(redis.hget("settings/development/app", :items)).should == {"data" => 10}
+    end
+  end
+
+  describe "#namespace" do
     it "should include settings as namespace root" do
       subject.namespace.should == "settings/app"
     end
   end
 
-  describe ".set" do
+  describe "#set" do
     it "should set value" do
       subject.set(:items, 5)
       JSON.parse(redis.hget(subject.namespace, :items)).should == {"data" => 5}
@@ -47,7 +61,7 @@ describe Redis::Settings do
     end
   end
 
-  describe ".get" do
+  describe "#get" do
     it "should get value" do
       subject.set(:items, 5)
       subject.get(:items).should == 5
@@ -64,7 +78,7 @@ describe Redis::Settings do
     end
   end
 
-  describe ".clear" do
+  describe "#clear" do
     it "should remove all settings" do
       subject[:items] = 5
 
