@@ -8,6 +8,8 @@ Store application and user settings on Redis. Comes with ActiveRecord support.
 
 Redis::Settings store all data in JSON format. The default parser is yajl-ruby[https://rubygems.org/gems/yajl-ruby], with fallback to json[https://rubygems.org/gems/json]. Make sure you have one of those installed.
 
+If you're running Ruby 1.9, you're ready to go!
+
 == Usage
 
   require "redis/settings"
