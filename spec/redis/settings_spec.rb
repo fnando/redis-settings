@@ -9,7 +9,7 @@ describe Redis::Settings do
   end
 
   describe "#all" do
-    it "should return all settings" do
+    it "returns all settings" do
       subject[:items] = 10
       subject[:enabled] = true
 
@@ -18,7 +18,7 @@ describe Redis::Settings do
   end
 
   describe ".configure" do
-    it "should yield module" do
+    it "yields module" do
       Redis::Settings.configure {|config| config.should be(Redis::Settings)}
     end
   end
@@ -27,34 +27,34 @@ describe Redis::Settings do
     before { Redis::Settings.root_namespace = "settings/development" }
     after { Redis::Settings.root_namespace = "settings" }
 
-    it "should use custom namespace" do
+    it "uses custom namespace" do
       subject.namespace.should == "settings/development/app"
     end
 
-    it "should set value using custom namespace" do
+    it "sets value using custom namespace" do
       subject[:items] = 10
       JSON.parse(redis.hget("settings/development/app", :items)).should == {"data" => 10}
     end
   end
 
   describe "#namespace" do
-    it "should include settings as namespace root" do
+    it "includes settings as namespace root" do
       subject.namespace.should == "settings/app"
     end
   end
 
   describe "#set" do
-    it "should set value" do
+    it "sets value" do
       subject.set(:items, 5)
       JSON.parse(redis.hget(subject.namespace, :items)).should == {"data" => 5}
     end
 
-    it "should have shortcut" do
+    it "has shortcut" do
       subject[:items] = 10
       JSON.parse(redis.hget(subject.namespace, :items)).should == {"data" => 10}
     end
 
-    it "should remove setting when assigning nil" do
+    it "removes setting when assigning nil" do
       subject[:items] = 20
       subject[:items] = nil
       redis.hget(subject.namespace, :items).should be_nil
@@ -76,24 +76,24 @@ describe Redis::Settings do
   end
 
   describe "#get" do
-    it "should get value" do
+    it "gets value" do
       subject.set(:items, 5)
       subject.get(:items).should == 5
     end
 
-    it "should have alias" do
+    it "has alias" do
       subject[:items] = 10
       subject[:items].should == 10
     end
 
-    it "should return default value" do
+    it "returns default value" do
       subject[:items] = nil
       subject.get(:items, 15).should == 15
     end
   end
 
   describe "#clear" do
-    it "should remove all settings" do
+    it "removes all settings" do
       subject[:items] = 5
 
       redis.hgetall(subject.namespace).should_not be_empty

@@ -10,22 +10,22 @@ describe Redis::Settings::ActiveRecord do
     admin.settings.clear
   end
 
-  it "should inject settings method" do
+  it "injects settings method" do
     User.new.should respond_to(:settings)
   end
 
-  it "should raise when trying to access settings from a new record" do
+  it "raises when trying to access settings from a new record" do
     expect {
       User.new.settings
     }.to raise_error(Redis::Settings::NewRecordError)
   end
 
-  it "should set namespace accordingly" do
+  it "sets namespace accordingly" do
     user.settings.namespace.should == "#{root}/user/#{user.id}"
     admin.settings.namespace.should == "#{root}/admin/user/#{admin.id}"
   end
 
-  it "should define setting" do
+  it "defines setting" do
     admin.settings[:role] = "admin"
     user.settings[:role] = "support"
 
@@ -33,7 +33,7 @@ describe Redis::Settings::ActiveRecord do
     admin.settings[:role].should == "admin"
   end
 
-  it "should remove all settings when destroy a record" do
+  it "removes all settings when destroy a record" do
     user.settings[:role] = "customer"
     user.destroy
     Redis::Settings.connection.hgetall("#{root}/user/#{user.id}").should be_empty
