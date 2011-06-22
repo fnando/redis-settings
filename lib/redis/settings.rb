@@ -82,6 +82,14 @@ class Redis
       end
     end
 
+    # Delete the specified option. Just a shortcut for <tt>settings.set(:name, nil)</tt>.
+    #
+    def remove(name)
+      set(name, nil)
+    end
+
+    alias_method :delete, :remove
+
     # Remove all settings from the current namespace
     def clear
       redis.del(namespace)

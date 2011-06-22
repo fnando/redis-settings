@@ -61,6 +61,20 @@ describe Redis::Settings do
     end
   end
 
+  describe "#remove" do
+    it "removes option" do
+      subject[:items] = 20
+      subject.remove(:items)
+      redis.hget(subject.namespace, :items).should be_nil
+    end
+
+    it "has alias" do
+      subject[:items] = 20
+      subject.delete(:items)
+      redis.hget(subject.namespace, :items).should be_nil
+    end
+  end
+
   describe "#get" do
     it "should get value" do
       subject.set(:items, 5)
