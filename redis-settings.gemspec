@@ -18,7 +18,8 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency "redis"
-  s.add_development_dependency "rspec", ">= 2.0.0"
+  s.add_development_dependency "rake", "~> 0.8.7"
+  s.add_development_dependency "rspec", "~> 2.6"
   s.add_development_dependency "ruby-debug19"
   s.add_development_dependency "activerecord"
   s.add_development_dependency "sqlite3-ruby"

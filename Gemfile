@@ -1,4 +1,2 @@
-source "http://rubygems.org"
-
-# Specify your gem's dependencies in redis-options.gemspec
+source "http://gems.simplesideias.com.br"
 gemspec
