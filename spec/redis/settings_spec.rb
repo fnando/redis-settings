@@ -81,9 +81,14 @@ describe Redis::Settings do
       subject.get(:items).should == 5
     end
 
-    it "has alias" do
+    it "has #[] alias" do
       subject[:items] = 10
       subject[:items].should == 10
+    end
+
+    it "has #fetch alias" do
+      subject[:items] = 10
+      subject.fetch(:items).should == 10
     end
 
     it "returns default value" do

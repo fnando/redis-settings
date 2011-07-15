@@ -102,6 +102,7 @@ class Redis
 
     alias_method :[]=, :set
     alias_method :[], :get
+    alias_method :fetch, :get
 
     private
     def redis # :nodoc:
