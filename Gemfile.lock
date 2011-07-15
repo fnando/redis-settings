@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    redis-settings (0.2.0)
+    redis-settings (0.2.1)
       redis
 
 GEM
