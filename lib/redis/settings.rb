@@ -66,7 +66,7 @@ class Redis
         value = payload["data"]
       end
 
-      value || default
+      value.nil? ? default : value
     end
 
     # Define a value for the specified setting.
