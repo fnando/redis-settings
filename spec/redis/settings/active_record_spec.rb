@@ -20,6 +20,12 @@ describe Redis::Settings::ActiveRecord do
     }.to raise_error(Redis::Settings::NewRecordError)
   end
 
+  it "should not raise exception if new record was destroyed" do
+    expect {
+      User.new { |u| u.id = 7 }.destroy
+    }.to_not raise_error(Redis::Settings::NewRecordError)
+  end
+
   it "sets namespace accordingly" do
     user.settings.namespace.should == "#{root}/user/#{user.id}"
     admin.settings.namespace.should == "#{root}/admin/user/#{admin.id}"
