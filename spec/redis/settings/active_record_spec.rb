@@ -1,14 +1,9 @@
 require "spec_helper"
 
 describe Redis::Settings::ActiveRecord do
-  let(:user) { User.create }
-  let(:admin) { Admin::User.create }
-  let(:root) { Redis::Settings.root_namespace }
-
-  before do
-    user.settings.clear
-    admin.settings.clear
-  end
+  let!(:user) { User.create! }
+  let!(:admin) { Admin::User.create! }
+  let!(:root) { Redis::Settings.root_namespace }
 
   it "injects settings method" do
     User.new.should respond_to(:settings)
@@ -20,7 +15,7 @@ describe Redis::Settings::ActiveRecord do
     }.to raise_error(Redis::Settings::NewRecordError)
   end
 
-  it "should not raise exception if new record was destroyed" do
+  it "doesn't raise exception if new record was destroyed" do
     expect {
       User.new { |u| u.id = 7 }.destroy
     }.to_not raise_error(Redis::Settings::NewRecordError)
@@ -42,6 +37,7 @@ describe Redis::Settings::ActiveRecord do
   it "removes all settings when destroy a record" do
     user.settings[:role] = "customer"
     user.destroy
-    Redis::Settings.connection.hgetall("#{root}/user/#{user.id}").should be_empty
+    settings = Redis::Settings.connection.hgetall("#{root}/user/#{user.id}")
+    expect(settings).to be_empty
   end
 end

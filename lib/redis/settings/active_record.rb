@@ -4,7 +4,7 @@ class Redis
       def self.included(base)
         base.class_eval do
           include InstanceMethods
-          after_destroy :clear_settings, if: :persisted?
+          after_destroy :clear_settings
         end
       end
 
@@ -15,7 +15,7 @@ class Redis
         end
 
         def clear_settings
-          settings.clear
+          settings.clear unless new_record?
         end
       end
     end

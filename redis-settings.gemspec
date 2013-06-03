@@ -22,4 +22,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "activerecord"
   s.add_development_dependency "redis-namespace"
   s.add_development_dependency "sqlite3"
+  s.add_development_dependency "pry-meta"
 end
