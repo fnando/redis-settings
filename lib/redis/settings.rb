@@ -1,15 +1,9 @@
 require "redis"
 
-begin
-  require "yajl/json_gem"
-rescue LoadError
-  require "json"
-end
-
 class Redis
   class Settings
     require "redis/settings/active_record" if defined?(ActiveRecord)
-    require "redis/settings/railtie" if defined?(Rails) && Rails.version >= "3.0.0"
+    require "redis/settings/railtie" if defined?(Rails)
 
     class NewRecordError < StandardError
       def message; "You can't access settings on new records"; end
@@ -18,10 +12,20 @@ class Redis
     class << self
       attr_accessor :connection
       attr_accessor :root_namespace
+      attr_accessor :json_parser
     end
 
     # Set the root namespace to "settings" by default.
     self.root_namespace = "settings"
+
+    # Set the json parser.
+    begin
+      require "oj"
+      self.json_parser = Oj
+    rescue LoadError
+      require "json"
+      self.json_parser = JSON
+    end
 
     # Return Redis::Settings.
     #
@@ -62,7 +66,7 @@ class Redis
       value = redis.hget(namespace, name)
 
       if value
-        payload = JSON.parse(value)
+        payload = self.class.json_parser.load(value)
         value = payload["data"]
       end
 
@@ -78,7 +82,7 @@ class Redis
       if value.nil?
         redis.hdel(namespace, name)
       else
-        redis.hset(namespace, name, {:data => value}.to_json)
+        redis.hset(namespace, name, self.class.json_parser.dump(:data => value))
       end
     end
 
@@ -97,7 +101,7 @@ class Redis
 
     # Return a hash with all settings
     def all
-      Hash[redis.hgetall(namespace).collect {|k, v| [k.to_sym, JSON.parse(v)["data"]]}]
+      Hash[redis.hgetall(namespace).map {|k, v| [k.to_sym, self.class.json_parser.load(v)["data"]]}]
     end
 
     alias_method :[]=, :set
@@ -105,6 +109,7 @@ class Redis
     alias_method :fetch, :get
 
     private
+
     def redis # :nodoc:
       self.class.connection
     end

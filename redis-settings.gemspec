@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 require "./lib/redis/settings/version"
 
 Gem::Specification.new do |s|
@@ -13,12 +12,12 @@ Gem::Specification.new do |s|
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+  s.executables   = `git ls-files -- bin/*`.split("\n").map{|f| File.basename(f) }
   s.require_paths = ["lib"]
 
   s.add_dependency "redis"
   s.add_development_dependency "rake"
-  s.add_development_dependency "rspec"
+  s.add_development_dependency "minitest-utils"
   s.add_development_dependency "activerecord"
   s.add_development_dependency "redis-namespace"
   s.add_development_dependency "sqlite3"
