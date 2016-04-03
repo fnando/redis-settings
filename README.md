@@ -1,5 +1,10 @@
 # Redis::Settings
 
+[![Travis-CI](https://travis-ci.org/fnando/redis-settings.png)](https://travis-ci.org/fnando/redis-settings)
+[![CodeClimate](https://codeclimate.com/github/fnando/redis-settings.png)](https://codeclimate.com/github/fnando/redis-settings)
+[![Gem](https://img.shields.io/gem/v/redis-settings.svg)](https://rubygems.org/gems/redis-settings)
+[![Gem](https://img.shields.io/gem/dt/redis-settings.svg)](https://rubygems.org/gems/redis-settings)
+
 Store application and user settings on Redis. Comes with ActiveRecord support.
 
 ## Installation
